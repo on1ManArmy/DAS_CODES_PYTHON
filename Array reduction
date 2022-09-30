@@ -1,0 +1,42 @@
+
+
+#include<bits/stdc++.h>
+using namespace std;
+typedef long long int ll;
+
+int solveReduction(vector<ll> & nums){
+    ll total = 0;
+    for(auto number: nums){
+        total+=number;
+    }
+
+    int res=0;
+
+    for(int i=0;i<nums.size();i++){
+        if( 2 * nums[i] >= (total-nums[i])){
+            res++;
+        }
+    }
+
+    return res;
+}
+
+
+int main(){
+#ifndef ONLINE_JUDGE
+    freopen("input.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
+#endif
+
+    int n;
+    cin>>n;
+
+    vector<ll> vec;
+    for(int i=0;i<n;i++){
+        int t;
+        cin>>t;
+        vec.push_back(t);
+    }
+
+    cout<<solveReduction(vec)<<endl;
+}
