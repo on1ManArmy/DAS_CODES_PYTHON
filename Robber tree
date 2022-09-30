@@ -1,0 +1,90 @@
+/* ॐ भूर्भुवः स्वः तत्सवितुर्वरेण्यम् भर्गो 
+देवस्य धीमहि धियो यो नः प्रचोदयात् । */
+
+/// Robber tree - Intuit OA
+#include <bits/stdc++.h>
+using namespace std;
+#define endl "\n"
+#define pb push_back
+#define ll long long
+#define vi vector<int>
+#define br cout<<endl;
+
+ll dfs(int i, int par, vi& timer, vi& timemer, vi& value, vi graph[], int t){
+	ll ans = 0;
+	if(t == timer[i]){
+		ans = value[i]/2;
+	}
+	else if(t < timer[i]){
+		ans = value[i];
+	}
+	ll x = 0;
+	for(auto child: graph[i]){
+		if(child != par){
+			x = max(x, dfs(child, i, timer, timemer, value, graph, t+1));
+		}
+	}
+
+	return ans+x;
+}
+
+int dfsTime(int i, int par, vi& v, vi graph[], int rpos){
+	if(i == rpos){
+		v.push_back(rpos);
+		return 1;
+	}
+	v.push_back(i);
+
+	for(auto child: graph[i]){
+		if(child == par){
+			continue;
+		}
+		if(dfsTime(child, i, v, graph, rpos)){
+			return 1;
+		}
+	}
+	v.pop_back();
+	return 0;
+}
+
+int main() {
+
+#ifndef ONLINE_JUDGE
+	freopen("input.txt", "r", stdin);
+	freopen("output.txt", "w", stdout);
+#endif
+
+	int n, position;
+	cin>>n>>position;
+	vector<int> graph[n+1];
+
+	for(int i=0;i<n-1;i++){
+		int u, v;
+		cin>>u>>v;
+
+		graph[u].push_back(v);
+		graph[v].push_back(u);
+	}
+
+	vi value(n+1, 0);
+	for(int i=1;i<=n;i++){
+		cin>>value[i];
+	}
+
+	vector<int> timer(n+1, INT_MAX);
+	vector<int> timemer(n+1, -1);
+	timemer[1] = 0;
+
+	int t = 0;
+
+	vector<int> robberPaths;
+	dfsTime(1, -1, robberPaths, graph, position);
+
+	for(int i=robberPaths.size() - 1; i>=0 ; i--){
+		timer[robberPaths[i]] = robberPaths.size() - i-1;
+	}
+	
+	cout<<dfs(1, -1, timer, timemer, value, graph, 0); br;
+
+	return 0;
+}
